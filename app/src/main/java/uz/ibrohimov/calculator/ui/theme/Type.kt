@@ -20,6 +20,6 @@ val CalculatorTypography = Typography(
     labelLarge = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Medium,
-        fontSize = 23.sp
+        fontSize = 30.sp
     ),
 )
