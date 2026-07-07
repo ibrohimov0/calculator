@@ -1,10 +1,12 @@
 package uz.ibrohimov.calculator.presentation.calculator
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -17,32 +19,50 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import uz.ibrohimov.calculator.ui.theme.CalculatorTheme
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Backspace
+import androidx.compose.material.icons.filled.Percent
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material3.Icon
+
+data class ActionButton(
+    val label: String,
+    val icon: ImageVector? = null,
+    val type: String
+)
 
 @Composable
 fun CalculatorScreen(modifier: Modifier = Modifier) {
-    Column(modifier = modifier) {
+    var displayNumber by remember { mutableStateOf("") }
+    Column(
+        modifier = modifier.padding(vertical = 20.dp, horizontal = 10.dp),
+        verticalArrangement = Arrangement.Bottom
+    ) {
         Text(
-            "128+47",
+            "128+47=175",
             color = MaterialTheme.colorScheme.secondary,
-            style = MaterialTheme.typography.titleMedium,
+            style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Medium,
             textAlign = TextAlign.End,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 15.dp, vertical = 5.dp)
+                .padding(horizontal = 15.dp)
         )
         Text(
-            "175",
+            text = if (displayNumber.isEmpty()) "0" else displayNumber,
             color = MaterialTheme.colorScheme.onBackground,
-            style = MaterialTheme.typography.titleLarge,
+            style = MaterialTheme.typography.displayLarge,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.End,
             modifier = Modifier
@@ -51,11 +71,35 @@ fun CalculatorScreen(modifier: Modifier = Modifier) {
         )
         Row(modifier = Modifier.fillMaxWidth()) {
             Column(modifier = Modifier.weight(1f)) {
-                val topActions = remember { listOf("AC", "+/-", "%") }
+                val topActions = remember {
+                    listOf(
+                        ActionButton(icon = Icons.Outlined.Delete, type = "Delete", label = "d"),
+                        ActionButton(
+                            icon = Icons.Filled.Backspace,
+                            type = "Backspace",
+                            label = "b"
+                        ),
+                        ActionButton(icon = Icons.Filled.Percent, type = "Percent", label = "%")
+                    )
+                }
                 LazyVerticalGrid(columns = GridCells.Fixed(3), modifier = Modifier.fillMaxWidth()) {
                     items(topActions) { action ->
                         FilledTonalButton(
-                            onClick = { /*TODO*/ },
+                            onClick = {
+                                when (action.type) {
+                                    "Delete" -> displayNumber = ""
+                                    "Backspace" -> {
+                                        if (displayNumber.isNotEmpty()) {
+                                            displayNumber = displayNumber.dropLast(1)
+                                        }
+                                    }
+
+                                    "Percent" -> {
+                                        if (displayNumber.isNotEmpty() && displayNumber.last() != '%')
+                                            displayNumber += "%"
+                                    }
+                                }
+                            },
                             colors = ButtonDefaults.filledTonalButtonColors(
                                 containerColor = MaterialTheme.colorScheme.surfaceVariant,
                                 contentColor = MaterialTheme.colorScheme.onSurfaceVariant
@@ -63,12 +107,27 @@ fun CalculatorScreen(modifier: Modifier = Modifier) {
                             shape = RoundedCornerShape(50.dp),
                             modifier = Modifier.padding(all = 3.dp)
                         ) {
-                            Text(
-                                text = action,
-                                style = MaterialTheme.typography.labelLarge,
-                                modifier = Modifier.padding(horizontal = 1.dp, vertical = 15.dp),
-                                fontWeight = FontWeight.Bold
-                            )
+                            if (action.icon != null) {
+                                Icon(
+                                    imageVector = action.icon,
+                                    contentDescription = action.label,
+                                    modifier = Modifier
+                                        .padding(
+                                            horizontal = 1.dp,
+                                            vertical = 20.dp
+                                        )
+                                        .size(25.dp)
+                                )
+                            } else {
+                                Text(
+                                    text = action.label,
+                                    modifier = Modifier.padding(
+                                        horizontal = 1.dp,
+                                        vertical = 15.dp
+                                    ),
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
 
                         }
                     }
@@ -84,9 +143,8 @@ fun CalculatorScreen(modifier: Modifier = Modifier) {
                             )
                         }) { index, number ->
                         val isLast = index == numbers.lastIndex
-
                         FilledTonalButton(
-                            onClick = { /*TODO*/ },
+                            onClick = { displayNumber += number.toString() },
                             colors = ButtonDefaults.filledTonalButtonColors(
                                 containerColor = MaterialTheme.colorScheme.background,
                                 contentColor = MaterialTheme.colorScheme.onBackground
@@ -110,9 +168,21 @@ fun CalculatorScreen(modifier: Modifier = Modifier) {
                 }
             }
             Column {
-                listOf("÷", "x", "-", "+", "=").forEach {
+                listOf(
+                    ActionButton(label = "÷", type = "÷"),
+                    ActionButton(label = "x", type = "x"),
+                    ActionButton(label = "-", type = "-"),
+                    ActionButton(label = "+", type = "+"),
+                    ActionButton(label = "=", type = "=")
+                ).forEach { action ->
                     FilledTonalButton(
-                        onClick = { /*TODO*/ },
+                        onClick = {
+                            if (action.type == "=") {
+                                displayNumber = "We are working on result :)"
+                            } else if (!displayNumber.isEmpty()) {
+                                displayNumber += action.label.toString()
+                            }
+                        },
                         colors = ButtonDefaults.filledTonalButtonColors(
                             containerColor = MaterialTheme.colorScheme.primary,
                             contentColor = MaterialTheme.colorScheme.onPrimary
@@ -121,9 +191,9 @@ fun CalculatorScreen(modifier: Modifier = Modifier) {
                         modifier = Modifier.padding(all = 3.dp)
                     ) {
                         Text(
-                            text = it,
+                            text = action.label,
                             style = MaterialTheme.typography.labelLarge,
-                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 15.dp),
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 14.dp),
                             fontWeight = FontWeight.Bold
                         )
                     }
@@ -133,7 +203,7 @@ fun CalculatorScreen(modifier: Modifier = Modifier) {
     }
 }
 
-@Preview
+@PreviewLightDark
 @Composable
 fun CalculatorScreenPreview() {
     CalculatorTheme {
