@@ -2,7 +2,7 @@ package uz.ibrohimov.calculator.domain.usecase
 
 import uz.ibrohimov.calculator.domain.model.CalculatorOperation
 
-fun calculatorResult(
+fun calculateResult(
     number1: String,
     operation: CalculatorOperation,
     number2: String
