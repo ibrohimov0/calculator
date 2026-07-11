@@ -1,12 +1,12 @@
 package uz.ibrohimov.calculator.domain.model
 
-sealed class CalculatortAction {
-    data class Number(val number: Int) : CalculatortAction()
-    data class Operation(val operation: CalculatorOperation) : CalculatortAction()
-    object Clear : CalculatortAction()
-    object Delete : CalculatortAction()
-    object Calculate : CalculatortAction()
-    object Decimal : CalculatortAction()
+sealed class CalculatorAction {
+    data class Number(val number: Int) : CalculatorAction()
+    data class Operation(val operation: CalculatorOperation) : CalculatorAction()
+    object Clear : CalculatorAction()
+    object Delete : CalculatorAction()
+    object Calculate : CalculatorAction()
+    object Decimal : CalculatorAction()
 }
 
 enum class CalculatorOperation(val symbol: String) {

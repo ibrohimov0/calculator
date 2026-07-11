@@ -16,7 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun CalulatorButton(
+fun CalculatorButton(
     text: String,
     symbol: ImageVector? = null,
     modifier: Modifier = Modifier,

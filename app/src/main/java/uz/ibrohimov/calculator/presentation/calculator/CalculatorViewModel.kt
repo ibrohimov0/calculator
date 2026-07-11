@@ -5,21 +5,21 @@ import androidx.lifecycle.ViewModel
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import uz.ibrohimov.calculator.domain.model.CalculatorOperation
-import uz.ibrohimov.calculator.domain.model.CalculatortAction
+import uz.ibrohimov.calculator.domain.model.CalculatorAction
 import uz.ibrohimov.calculator.domain.usecase.calculateResult
 
 class CalculatorViewModel : ViewModel() {
     var state by mutableStateOf(CalculatorState())
         private set
 
-    fun onAction(action: CalculatortAction) {
+    fun onAction(action: CalculatorAction) {
         when (action) {
-            is CalculatortAction.Number -> enterNumber(action.number)
-            is CalculatortAction.Decimal -> enterDecimal()
-            is CalculatortAction.Operation -> enterOperation(action.operation)
-            is CalculatortAction.Clear -> state = CalculatorState()
-            is CalculatortAction.Calculate -> performCalculation()
-            is CalculatortAction.Delete -> perfomDelete()
+            is CalculatorAction.Number -> enterNumber(action.number)
+            is CalculatorAction.Decimal -> enterDecimal()
+            is CalculatorAction.Operation -> enterOperation(action.operation)
+            is CalculatorAction.Clear -> state = CalculatorState()
+            is CalculatorAction.Calculate -> performCalculation()
+            is CalculatorAction.Delete -> perfomDelete()
         }
     }
 
