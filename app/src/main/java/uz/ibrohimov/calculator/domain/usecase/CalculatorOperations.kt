@@ -12,8 +12,8 @@ fun calculateResult(
 
     return when (operation) {
         CalculatorOperation.Add -> n1 + n2
-        CalculatorOperation.Divide -> n1 - n2
+        CalculatorOperation.Subtract -> n1 - n2
         CalculatorOperation.Multiply -> n1 * n2
-        CalculatorOperation.Subtract -> if (n2 != 0.0) n1 / n2 else Double.NaN
+        CalculatorOperation.Divide -> if (n2 != 0.0) n1 / n2 else Double.NaN
     }
 }

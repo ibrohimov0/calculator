@@ -54,8 +54,8 @@ fun CalculatorScreen(modifier: Modifier = Modifier, viewModel: CalculatorViewMod
                 LazyVerticalGrid(columns = GridCells.Fixed(3), modifier = Modifier.fillMaxWidth()) {
                     items(
                         listOf(
-                            Triple("d", Icons.Outlined.Delete, CalculatorAction.Delete),
-                            Triple("b", Icons.Filled.Backspace, CalculatorAction.Clear),
+                            Triple("d", Icons.Outlined.Delete, CalculatorAction.Clear),
+                            Triple("b", Icons.Filled.Backspace, CalculatorAction.Delete),
                             Triple("%", Icons.Filled.Percent, CalculatorAction.Decimal)
                         )
                     ) { (label, symbol, action) ->
